@@ -1,10 +1,10 @@
 [package]
 name = "rust-asm-calc"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 
 [dependencies]
-inquire = "0.9.4"
+inquire = "0.9.5"
 
 [profile.release]
 strip = true
