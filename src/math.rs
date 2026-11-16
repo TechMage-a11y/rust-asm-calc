@@ -10,6 +10,7 @@ pub fn add(a: i64, b: i64) -> Result<i64, &'static str> {
         inout(reg) a => result,
         in(reg) b,
         out(reg_byte) overflow,
+        options(pure, nomem, nostack),
         );
     }
     if overflow != 0 {
@@ -28,6 +29,7 @@ pub fn sub(a: i64, b: i64) -> Result<i64, &'static str> {
         inout(reg) a => result,
         in(reg) b,
         out(reg_byte) overflow,
+        options(pure, nomem, nostack),
         );
     }
     if overflow != 0 {
@@ -46,6 +48,7 @@ pub fn mul(a: i64, b: i64) -> Result<i64, &'static str> {
         inout(reg) a => result,
         in(reg) b,
         out(reg_byte) overflow,
+        options(pure, nomem, nostack),
         );
     }
     if overflow != 0 {
@@ -69,6 +72,7 @@ pub fn div(a: i64, b: i64) -> Result<i64, &'static str> {
         inout("rax") a => result,
         out("rdx") _,
         divisor = in(reg) b,
+        options(pure, nomem, nostack),
         );
     }
     Ok(result)
