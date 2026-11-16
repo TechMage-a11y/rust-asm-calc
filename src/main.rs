@@ -10,13 +10,13 @@ const SEPARATOR: &'static str = "----------------";
 fn main() {
     loop {
         println!("{SEPARATOR}");
-        let num1 = CustomType::<i64>::new("Введите 1 число: ")
-            .with_error_message("Введите целое число!!")
+        let num1 = CustomType::<f64>::new("Введите 1 число: ")
+            .with_error_message("Введите число!")
             .prompt()
             .unwrap_or_default();
         
-        let num2 = CustomType::<i64>::new("Введите 2 число: ")
-            .with_error_message("Введите целое число!!")
+        let num2 = CustomType::<f64>::new("Введите 2 число: ")
+            .with_error_message("Введите число!")
             .prompt()
             .unwrap_or_default();
 
