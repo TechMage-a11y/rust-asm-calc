@@ -4,33 +4,33 @@ pub fn add(a: i64, b: i64) -> Result<i64, &'static str> {
     let result: i64;
     unsafe {
         asm!(
-            "add {0}, {1}",
-            inout(reg) a => result,
-            in(reg) b,
+        "add {0}, {1}",
+        inout(reg) a => result,
+        in(reg) b,
         );
     }
     Ok(result)
 }
 
-pub fn sub(x: i64, y: i64) -> Result<i64, &'static str> {
+pub fn sub(a: i64, b: i64) -> Result<i64, &'static str> {
     let result: i64;
     unsafe {
         asm!(
         "sub {0}, {1}",
-        inout(reg) x => result,
-        in(reg) y,
+        inout(reg) a => result,
+        in(reg) b,
         );
     }
     Ok(result)
 }
 
-pub fn mul(x: i64, y: i64) -> Result<i64, &'static str> {
+pub fn mul(a: i64, b: i64) -> Result<i64, &'static str> {
     let result: i64;
     unsafe {
         asm!(
         "imul {0}, {1}",
-        inout(reg) x => result,
-        in(reg) y,
+        inout(reg) a => result,
+        in(reg) b,
         );
     }
     Ok(result)
