@@ -1,5 +1,18 @@
 use std::arch::asm;
 
+fn validate_result(result: f64) -> Result<f64, &'static str> {
+    if result.is_infinite() {
+        return Err("Переполнение при вычислении!!");
+    }
+    if result.is_nan() {
+        return Err("Некорректный математический результат (NaN)!!");
+    }
+    if result == 0.0 {
+        return Ok(0.0);
+    }
+    Ok(result)
+}
+
 pub fn add(a: f64, b: f64) -> Result<f64, &'static str> {
     let result: f64;
     unsafe {
@@ -10,10 +23,7 @@ pub fn add(a: f64, b: f64) -> Result<f64, &'static str> {
         options(pure, nomem, nostack),
         );
     }
-    if result.is_infinite() {
-        return Err("Переполнение при сложении!!");
-    }
-    Ok(result)
+    validate_result(result)
 }
 
 pub fn sub(a: f64, b: f64) -> Result<f64, &'static str> {
@@ -26,10 +36,7 @@ pub fn sub(a: f64, b: f64) -> Result<f64, &'static str> {
         options(pure, nomem, nostack),
         );
     }
-    if result.is_infinite() {
-        return Err("Переполнение при вычитании!!");
-    }
-    Ok(result)
+    validate_result(result)
 }
 
 pub fn mul(a: f64, b: f64) -> Result<f64, &'static str> {
@@ -42,10 +49,7 @@ pub fn mul(a: f64, b: f64) -> Result<f64, &'static str> {
         options(pure, nomem, nostack),
         );
     }
-    if result.is_infinite() {
-        return Err("Переполнение при умножении!!");
-    }
-    Ok(result)
+    validate_result(result)
 }
 
 pub fn div(a: f64, b: f64) -> Result<f64, &'static str> {
@@ -61,8 +65,5 @@ pub fn div(a: f64, b: f64) -> Result<f64, &'static str> {
         options(pure, nomem, nostack),
         );
     }
-    if result.is_infinite() {
-        return Err("Переполнение при делении!!");
-    }
-    Ok(result)
+    validate_result(result)
 }
