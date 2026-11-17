@@ -9,16 +9,21 @@ pub enum Operation {
     Div(f64, f64),
 }
 
-fn prompt_number(text: &str) -> f64 {
+fn prompt_number(text: &str) -> Option<f64> {
     CustomType::<f64>::new(text)
         .with_error_message("Введите число")
         .prompt()
-        .unwrap_or_default()
+        .ok()
+}
+
+fn prompt_binary() -> Option<(f64, f64)> {
+    let a = prompt_number("Введите 1 число: ")?;
+    let b = prompt_number("Введите 2 число: ")?;
+    Some((a, b))
 }
 
 pub fn get_operation() -> Option<Operation> {
     println!("{SEPARATOR}");
-
     let options = vec!["Сложение", "Вычитание", "Умножение", "Деление"];
     let select = Select::new("Выберите операцию с числами:", options)
         .prompt()
@@ -26,22 +31,22 @@ pub fn get_operation() -> Option<Operation> {
 
     println!("{SEPARATOR}");
     let select_option = match select {
-        "Сложение" => Operation::Add(
-            prompt_number("Введите 1 число: "),
-            prompt_number("Введите 2 число: "),
-        ),
-        "Вычитание" => Operation::Sub(
-            prompt_number("Введите 1 число: "),
-            prompt_number("Введите 2 число: "),
-        ),
-        "Умножение" => Operation::Mul(
-            prompt_number("Введите 1 число: "),
-            prompt_number("Введите 2 число: "),
-        ),
-        "Деление" => Operation::Div(
-            prompt_number("Введите 1 число: "),
-            prompt_number("Введите 2 число: "),
-        ),
+        "Сложение" => {
+            let (a, b) = prompt_binary()?;
+            Operation::Add(a, b)
+        },
+        "Вычитание" => {
+            let (a, b) = prompt_binary()?;
+            Operation::Sub(a, b)
+        },
+        "Умножение" => {
+            let (a, b) = prompt_binary()?;
+            Operation::Mul(a, b)
+        },
+        "Деление" => {
+            let (a, b) = prompt_binary()?;
+            Operation::Div(a, b)
+        },
         _ => return None,
     };
 
