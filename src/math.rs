@@ -1,79 +1,68 @@
 use std::arch::asm;
 
-pub fn add(a: i64, b: i64) -> Result<i64, &'static str> {
-    let result: i64;
-    let overflow: u8;
+pub fn add(a: f64, b: f64) -> Result<f64, &'static str> {
+    let result: f64;
     unsafe {
         asm!(
-        "add {0}, {1}",
-        "seto {2}",
-        inout(reg) a => result,
-        in(reg) b,
-        out(reg_byte) overflow,
+        "addsd {0}, {1}",
+        inout(xmm_reg) a => result,
+        in(xmm_reg) b,
         options(pure, nomem, nostack),
         );
     }
-    if overflow != 0 {
+    if result.is_infinite() {
         return Err("Переполнение при сложении!!");
     }
     Ok(result)
 }
 
-pub fn sub(a: i64, b: i64) -> Result<i64, &'static str> {
-    let result: i64;
-    let overflow: u8;
+pub fn sub(a: f64, b: f64) -> Result<f64, &'static str> {
+    let result: f64;
     unsafe {
         asm!(
-        "sub {0}, {1}",
-        "seto {2}",
-        inout(reg) a => result,
-        in(reg) b,
-        out(reg_byte) overflow,
+        "subsd {0}, {1}",
+        inout(xmm_reg) a => result,
+        in(xmm_reg) b,
         options(pure, nomem, nostack),
         );
     }
-    if overflow != 0 {
-        return Err("Переполнение при вычитании!!")
+    if result.is_infinite() {
+        return Err("Переполнение при вычитании!!");
     }
     Ok(result)
 }
 
-pub fn mul(a: i64, b: i64) -> Result<i64, &'static str> {
-    let result: i64;
-    let overflow: u8;
+pub fn mul(a: f64, b: f64) -> Result<f64, &'static str> {
+    let result: f64;
     unsafe {
         asm!(
-        "imul {0}, {1}",
-        "seto {2}",
-        inout(reg) a => result,
-        in(reg) b,
-        out(reg_byte) overflow,
+        "mulsd {0}, {1}",
+        inout(xmm_reg) a => result,
+        in(xmm_reg) b,
         options(pure, nomem, nostack),
         );
     }
-    if overflow != 0 {
-        return Err("Переполнение при умножении!!")
+    if result.is_infinite() {
+        return Err("Переполнение при умножении!!");
     }
     Ok(result)
 }
 
-pub fn div(a: i64, b: i64) -> Result<i64, &'static str> {
-    if b == 0 {
+pub fn div(a: f64, b: f64) -> Result<f64, &'static str> {
+    if b == 0.0 {
         return Err("Деление на 0!!");
     }
-    if a == i64::MIN && b == -1 {
-        return Err("Переполнение при делении!!");
-    }
-    let result: i64;
+    let result: f64;
     unsafe {
         asm!(
-        "cqo",
-        "idiv {divisor}",
-        inout("rax") a => result,
-        out("rdx") _,
-        divisor = in(reg) b,
+        "divsd {0}, {1}",
+        inout(xmm_reg) a => result,
+        in(xmm_reg) b,
         options(pure, nomem, nostack),
         );
+    }
+    if result.is_infinite() {
+        return Err("Переполнение при делении!!");
     }
     Ok(result)
 }
