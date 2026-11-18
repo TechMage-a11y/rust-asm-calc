@@ -1,59 +1,26 @@
 mod math;
+mod cli;
 
-use inquire::CustomType;
-use inquire::Select;
-use inquire::Confirm;
 use crate::math::{add, div, mul, sub};
-
-const SEPARATOR: &'static str = "----------------";
+use crate::cli::{get_operation, Operation, print_result, ask_continue};
 
 fn main() {
     loop {
-        println!("{SEPARATOR}");
-        let num1 = CustomType::<f64>::new("Введите 1 число: ")
-            .with_error_message("Введите число!")
-            .prompt()
-            .unwrap_or_default();
-        
-        let num2 = CustomType::<f64>::new("Введите 2 число: ")
-            .with_error_message("Введите число!")
-            .prompt()
-            .unwrap_or_default();
-
-        println!("{SEPARATOR}");
-        let options = vec!["Сложение", "Вычитание", "Умножение", "Деление"];
-        let select = Select::new("Выберите операцию с числами:", options)
-            .prompt()
-            .unwrap_or_default();
-
-        let result = match select {
-            "Сложение" => add(num1, num2),
-            "Вычитание" => sub(num1, num2),
-            "Умножение" => mul(num1, num2),
-            "Деление" => div(num1, num2),
-            _ => Err("Неизвестная операция"),
+        let Some(operation) = get_operation() else {
+            break
         };
 
-        println!("{SEPARATOR}");
-        match result {
-            Ok(val) => println!("Результат: {}", val),
-            Err(err) => println!("Ошибка: {}", err),
-        }
+        let result = match operation {
+            Operation::Add(a, b) => add(a, b),
+            Operation::Sub(a, b) => sub(a, b),
+            Operation::Div(a, b) => div(a, b),
+            Operation::Mul(a, b) => mul(a, b),
+        };
 
-        println!("{SEPARATOR}");
-        let ans = Confirm::new("Вы хотите продолжить?")
-            .with_default(false)
-            .prompt();
+        print_result(result);
 
-        match ans {
-            Ok(true) => {}
-            Ok(false) => {
-                break
-            }
-            Err(_) => {
-                println!("Ошибка ввода");
-                break
-            }
+        if !ask_continue() {
+            break
         }
     }
 }
