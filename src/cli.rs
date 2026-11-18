@@ -1,6 +1,7 @@
 use inquire::{CustomType, Select, Confirm};
 
 const SEPARATOR: &str = "----------------------------------------";
+const OPERATIONS: [&str; 4] = ["Сложение", "Вычитание", "Умножение", "Деление"];
 
 pub enum Operation {
     Add(f64, f64),
@@ -24,8 +25,7 @@ fn prompt_binary() -> Option<(f64, f64)> {
 
 pub fn get_operation() -> Option<Operation> {
     println!("{SEPARATOR}");
-    let options = vec!["Сложение", "Вычитание", "Умножение", "Деление"];
-    let select = Select::new("Выберите операцию с числами:", options)
+    let select = Select::new("Выберите операцию с числами:", Vec::from(OPERATIONS))
         .prompt()
         .ok()?;
 
